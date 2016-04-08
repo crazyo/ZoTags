@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+	<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+			id="batch-add-tags-dialog"
+			title="Add Tags" 
+			buttons="cancel,accept"
+			onload="BatchTags.initAdd();"
+			ondialogaccept="Zotero.BatchEditing.addTags(BatchTags.acceptNewName());">
+
+		<script src="chrome://zotero/content/include.js"/>
+		<script src="batchtags.js"/>
+
+		<groupbox>
+			<label for="menulist-of-existing-tags" value="Select from existing tags:"/>
+			<menulist id="menulist-of-existing-tags">
+				<menupopup id="batch-add-tag-dropdown"/>
+			</menulist>
+			<label for="add-tag-new-name" value="Or enter a name of your choice:"/>
+			<textbox id="add-tag-new-name"/>
+		</groupbox>
+	</dialog>

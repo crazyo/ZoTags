@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<overlay id="batchediting-overlay"
+		 xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+
+<!-- 	<menupopup id="view-settings-popup">
+	<menupopup id="zotero-itemmenu">
+		<menuitem id="batch-edit-selector" label="Batch Edit Tags" oncommand="Zotero.BatchEditing.openDialog();"/>
+	</menupopup> -->
+	<hbox id="zotero-items-toolbar">
+		<toolbarseperator>
+		</toolbarseperator>
+		<toolbarbutton class="zotero-tb-button"
+			id="batchedit-button" 
+			tooltiptext="Batch Edit Tags"
+			style="list-style-image: url('chrome://zotero/skin/mac/cog.png')"
+			onclick="Zotero.BatchEditing.toggleAddTag();"
+			type="menu">
+
+			<menupopup id="batch-edit-menu">
+				<menuitem label="Rename Tags" oncommand="Zotero.BatchEditing.openDialog();"/>
+				<menuitem label="Merge Tags" oncommand="Zotero.BatchEditing.openDialog();"/>
+				<menuitem label="Delete Tags" oncommand="Zotero.BatchEditing.openDialog();"/>
+				<menuseperator></menuseperator>
+				<menuitem id="add-tags-menuitem" label="Add Tag To Selected Items" oncommand="Zotero.BatchEditing.openAddTagDialog();"/>
+			</menupopup>
+		</toolbarbutton>
+	</hbox>
+	
+
+	<!-- gain access to the Zotero object -->
+	<script src="chrome://zotero/content/include.js"/>
+	<!-- kick off our extension -->
+	<script src="chrome://batchediting/content/include.js"/>
+
+</overlay>

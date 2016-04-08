@@ -1,0 +1,3 @@
+content batchediting chrome/content/
+
+overlay chrome://zotero/content/zoteroPane.xul chrome://batchediting/content/overlay.xul

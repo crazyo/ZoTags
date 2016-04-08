@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+	<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+			id="batch-edit-tags-dialog"
+			title="Edit Tags" 
+			buttons="cancel,accept"
+			onload="BatchTags.init();"
+			ondialogaccept="Zotero.BatchEditing.acceptChanges(BatchTags.acceptChanges());">
+
+		<script src="chrome://zotero/content/include.js"/>
+		<script src="batchtags.js"/>
+
+		<vbox>
+			<groupbox id="tag-batch">
+			</groupbox>
+
+			<!-- <textbox id="testing" multiline="true"></textbox> --><!-- 
+			<button id="sss-tag" label="testAcce!" oncommand="Zotero.BatchEditing.acceptChanges(BatchTags.acceptChanges());" width="35" />
+			<button id="sss-tag2" label="test2!" oncommand="Zotero.BatchEditing.test();" width="35"/> -->
+		</vbox>
+			<row>
+				<button id="delete-tag" label="Delete!" oncommand="BatchTags.deleteTags();" width="35" />
+				<button id="rename-tag" label="Rename!" oncommand="BatchTags.toggleRenameFields();" width="35" />
+			</row>
+			<groupbox id="for-new-name" hidden="true">
+				<label for="input-new-name" id="input-name-label" value="Enter New Name:"/>
+				<textbox id="input-new-name" oninput="BatchTags.enableSave();"/>
+				<row align="right">
+					<button id="cancel-new-name" label="Cancel" oncommand="BatchTags.cancelRename();"/>
+					<button id="save-new-name" label="Save" disabled="true" oncommand="BatchTags.renameTags();"/>
+				</row>
+			</groupbox>
+	</dialog>
