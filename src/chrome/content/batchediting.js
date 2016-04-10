@@ -1,117 +1,153 @@
-Zotero.BatchEditing = {
-    ps: Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                                .getService(Components.interfaces.nsIPromptService),
+var ZotBatch_Main = new function() {
+    // public methods
+    this.init = init;
+    this.selectItems = selectItems;
+    this.updateTagsPool = updateTagsPool;
 
-    init: function() {
-        // var ZoteroPane = Components.classes["@mozilla.org/appshell/window-mediator;1"].getService(Components.interfaces.nsIWindowMediator).getMostRecentWindow("navigator:browser").ZoteroPane;
-        // var tagmenu = document.getElementById("view-settings-popup");
-        // var batchedit = document.createElement("menuitem");
-
-        // batchedit.setAttribute("label", "Batch Edit Tags");
-        // batchedit.setAttribute("oncommand", "Zotero.BatchEditing.openDialog();");
-        // tagmenu.appendChild(batchedit);
-        var observerID = Zotero.Notifier.registerObserver(this.observer, ["item"]);
-
-        window.addEventListener("unload", function() {
-            Zotero.Notifier.unregisterObserver(observerID);
-        });
-    },
-
-    openAddTagDialog: function(){
-        var selectedItems = ZoteroPane_Local.getSelectedItems();
-        window.openDialog("chrome://batchediting/content/addtags.xul",
-            "",
-            "chrome,centerscreen,resizable=yes",
-            selectedItems);
-    },
-
-    openDialog: function(){
-        window.openDialog("chrome://batchediting/content/batchtags.xul",
-            "",
-            "chrome,centerscreen,resizable=yes");
-    },
-
-    test: function(){
-        var ret = this.ps.confirm(null, "Confirm", "Confirmtest to make changes?");
-        window.alert(ret);
-    },
-
-    acceptChanges: function(listOfActions){
-        if (this.ps.confirm(null, "Confirm", "Confirm to make changes?")){
-            for (i=0;i < listOfActions.length; i++){
-
-                // Execute queries.
-                eval(listOfActions[i]);
-            };
-        };
-    },
+    // private methods/properties
+    this._ps = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
+                         .getService(Components.interfaces.nsIPromptService);
+    this._librarySelections = [];
+    this._selectedItemIDs = [];
 
 
-    //Zotero.Tags endpoint
-    renameTag: function(tagName, newTagName){
-        var tagID = this.getTagIDFromName(tagName);
-        Zotero.Tags.rename(tagID, newTagName);
-    },
+    function init() {
 
-    deleteTag: function(tagName){
-        var tagID = this.getTagIDFromName(tagName);
-        Zotero.Tags.erase(tagID);
-    },
+        // init filters
 
-    addTags: function(tagName){
-        if (this.ps.confirm(null, "Confirm", "Confirm to add tag?")){
-            var items = ZoteroPane_Local.getSelectedItems();
+        var libraryList = document.getElementById("library-list");
+        var groups = Zotero.Groups.getAll();
+        var library;
 
-            console.log(items);
+        // add my library
+        library = document.createElement("menuitem");
+        library.setAttribute("label", "My Library");
+        libraryList.appendChild(library);
+        // use 0 as the special library id for My Library
+        this._librarySelections.push(0);
 
-            if(!tagName){
-                this.ps.alert(null, "warning", "Tag Name can't be empty. No change will be made.")
-            } else{
+        // add group libraries
+        for (var i = 0; i < groups.length; i++) {
+            library = document.createElement("menuitem");
+            library.setAttribute("label", groups[i].name);
+            libraryList.appendChild(library);
+            this._librarySelections.push(groups[i].libraryID);
+        }
 
-                var tagID = this.getTagIDFromName(tagName);
+        // select the first library by default
+        if (this._librarySelections) {
+            document.getElementById("library-list-menu").selectedIndex = 0;
+        }
+        // update tags pool
+        this.updateTagsPool();
 
-                //Check if tag of given name exists.
-                if (tagID){
+        // init button statuses
 
-                    // Database access point.
-                    Zotero.DB.beginTransaction();
-                    tag = Zotero.Tags.get(tagID);
-                    //console.log(tag);
+        // apply-selected and add-new-tag are not activated initially
+        //   since no items are selected yet
+        document.getElementById("apply-selected").disabled = true;
+        document.getElementById("add-new-tag").disabled = true;
+    }
 
-                    for (i=0; i<items.length; i++){
-                        tag.addItem(items[i].getID());
-                        tag.save();
-                    }
+    function selectItems() {
+        // select items
+        var io = {};
+        window.openDialog("chrome://zotero/content/selectItemsDialog.xul", "", "chrome,modal", io);
+        // do nothing if user hit cancel or didn't select any item
+        if (!io.dataOut || !io.dataOut.length) {
+            return;
+        }
+        var items = Zotero.Items.get(io.dataOut);
 
-                    Zotero.DB.commitTransaction();
-
-
-
-                // tagName doesnt exist. 
-                // TODO: impletement this feature.
-                } else{
-                    console.log("doesnt");
-                }
+        // selected items must not be attachments
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].isAttachment()) {
+                this._ps.alert(null, "Attachments Selected", "Attachments do NOT have tags!");
+                return;
             }
         }
 
-    },
+        this._selectedItemIDs = io.dataOut;
 
-    toggleAddTag: function(){
-
-        console.log("inaaa");
-        if (ZoteroPane_Local.getSelectedItems().length != 0){
-            document.getElementById("add-tags-menuitem").disabled = false;
-        } else{
-            document.getElementById("add-tags-menuitem").disabled = true;
+        // clear items pool
+        var pool = document.getElementById("items-pool");
+        while (pool.firstChild) {
+            pool.removeChild(pool.firstChild);
         }
-    },
+        // refill items pool
+        for (var i = 0; i < items.length; i++) {
+            var row = document.createElement("listitem");
+            row.setAttribute("label", items[i].getDisplayTitle());
+            pool.appendChild(row);
+        }
 
-    getTagIDFromName: function(tagName){
-        var prepared = "SELECT tagID FROM tags WHERE name=?";
-        var param = [tagName];
-        return Zotero.DB.valueQuery(prepared, param);
+        // lock and set library selection
+        var libmenu = document.getElementById("library-list-menu");
+        libmenu.setAttribute("disabled", true);
+        // all selected items must belong to the same library
+        var libraryid = items[0].libraryID;
+        libmenu.selectedIndex = !libraryid ? 0 : this._librarySelections.indexOf(libraryid);
+
+        // enable apply-selected and add-new-tag
+        document.getElementById("apply-selected").disabled = false;
+        document.getElementById("add-new-tag").disabled = false;
+    }
+
+    function updateTagsPool() {
+        // retrieve filter info
+        var selectedLibraryID = ZotBatch_Main._librarySelections[document.getElementById("library-list-menu").selectedIndex];
+        var inputName = document.getElementById("search-by-tagname").value;
+        var selectedItemIDs = this._selectedItemIDs;
+
+        // retrieve filtered tags
+        var tags = _retrieveTags(selectedLibraryID, inputName, selectedItemIDs);
+
+        // clear tags pool
+        var pool = document.getElementById("tags-pool");
+        while (pool.firstChild) {
+            pool.removeChild(pool.firstChild);
+        }
+        // refill tags pool
+        for (var tagid in tags) {
+            if (!tags.hasOwnProperty(tagid)) {
+                continue;
+            }
+            var tag = tags[tagid];
+            var row = document.createElement("listitem");
+            row.setAttribute("type", "checkbox");
+            row.setAttribute("label", tag.name);
+            row.setAttribute("value", tagid);
+            document.getElementById("tags-pool").appendChild(row);
+        }
+    }
+
+    function _retrieveTags(libraryid, namepart, itemids) {
+        // base sql
+        var sql = "SELECT tagID, name FROM tags";
+        var params = [];
+
+        // library
+        sql += " WHERE libraryID";
+        if (libraryid) {
+            sql += "=?";
+            params.push(libraryid);
+        }
+        else {
+            sql += " IS NULL";
+        }
+
+        // partial name
+        if (namepart) {
+            sql += " AND name LIKE ?";
+            params.push("%" + namepart + "%");
+        }
+
+        // item ids
+        if (itemids && itemids.length) {
+            sql += " AND tagID IN (SELECT tagID FROM itemTags WHERE itemID IN (" + itemids.join() + "))";
+        }
+
+        var tags = params.length > 0 ? Zotero.DB.query(sql, params) : Zotero.DB.query(sql);
+        return tags;
     }
 };
-
-window.addEventListener("load", function() {Zotero.BatchEditing.init();});

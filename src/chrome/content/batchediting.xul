@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        id="batch-edit-tags-dialog"
+        title="Tag Batch Editing"
+        buttons="accept" buttonlabelaccept="Close"
+        onload="ZotBatch_Main.init();">
+
+    <script src="chrome://zotero/content/include.js"/>
+    <script src="batchediting.js"/>
+
+    <hbox>
+        <groupbox>
+            <caption label="Filters"/>
+            <hbox align="center">
+                <label control="search-by-tagname" value="Tag name contains: "/>
+                <textbox id="search-by-tagname" oninput="ZotBatch_Main.updateTagsPool();"/>
+            </hbox>
+            <groupbox>
+                <caption label="Library"/>
+                <menulist id="library-list-menu" oncommand="ZotBatch_Main.updateTagsPool();">
+                    <menupopup id="library-list"/>
+                </menulist>
+            </groupbox>
+            <groupbox>
+                <caption label="Items"/>
+                <hbox align="center">
+                    <label value="Tags assigned to items: "/>
+                    <button label="Select Items" oncommand="ZotBatch_Main.selectItems(); ZotBatch_Main.updateTagsPool();"/>
+                </hbox>
+                <listbox id="items-pool" rows="5" disabled="true"/>
+                <radiogroup>
+                    <radio id="apply-global" label="Apply tag changes globally" selected="true"/>
+                    <radio id="apply-selected" label="Apply tag changes only to above selected items"/>
+                </radiogroup>
+            </groupbox>
+        </groupbox>
+        <vbox>
+            <groupbox>
+                <caption label="Tags"/>
+                <listbox id="tags-pool" rows="10"/>
+            </groupbox>
+            <groupbox>
+                <caption label="Actions"/>
+                <hbox align="center">
+                    <button id="merge-tags" label="Merge" tooltiptext="Merge tags selected above"/>
+                    <button id="delete-tags" label="Delete" tooltiptext="Delete tags selected above"/>
+                    <button id="add-new-tag" label="Add" tooltiptext="Add a new tag to selected items"/>
+                </hbox>
+                <separator class="groove-thin"/>
+                <hbox align="center" hidden="true">
+                    <label control="enter-new-tagname" value="Enter new tag name: "/>
+                    <textbox id="enter-new-tagname"/>
+                </hbox>
+            </groupbox>
+        </vbox>
+    </hbox>
+</dialog>

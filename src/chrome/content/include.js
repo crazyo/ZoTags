@@ -1,6 +1,6 @@
 // only create main object once
-if (!Zotero.BatchEditing) {
+if (!Zotero.ZotBatch) {
     var loader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
                            .getService(Components.interfaces.mozIJSSubScriptLoader);
-    loader.loadSubScript("chrome://batchediting/content/batchediting.js");
+    loader.loadSubScript("chrome://zotbatch/content/zotbatch.js");
 }

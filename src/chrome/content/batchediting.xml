@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://zotero/skin/overlay.css" type="text/css"?>
+<!DOCTYPE bindings SYSTEM "chrome://zotero/locale/zotero.dtd">
+
+<bindings xmlns="http://www.mozilla.org/xbl"
+          xmlns:xbl="http://www.mozilla.org/xbl">
+
+    <binding id="tags-batch-editing" extends="chrome://zotero/content/bindings/tagselector.xml#tag-selector">
+        <implementation>
+            <method name="batchEdit">
+                <body>
+                    <![CDATA[
+                    Zotero.ZotBatch.openBatchEditingDialog();
+                    ]]>
+                </body>
+            </method>
+        </implementation>
+
+        <!-- DO NOT TOUCH ANYTHING BELOW OTHER THAN THE MARKED PART -->
+        <content>
+            <groupbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" flex="1">
+                <menupopup id="tag-menu">
+                    <menuitem label="&zotero.tagSelector.assignColor;"
+                        oncommand="_openColorPickerWindow(document.popupNode.getAttribute('value')); event.stopPropagation()"/>
+                    <menuitem label="&zotero.tagSelector.renameTag;"
+                        oncommand="document.getBindingParent(this).rename(document.popupNode.getAttribute('value')); event.stopPropagation()"/>
+                    <menuitem label="&zotero.tagSelector.deleteTag;"
+                        oncommand="document.getBindingParent(this).delete(document.popupNode.getAttribute('value')); event.stopPropagation()"/>
+                </menupopup>
+
+                <vbox id="no-tags-box" align="center" pack="center" flex="1">
+                    <label value="&zotero.tagSelector.noTagsToDisplay;"/>
+                </vbox>
+
+                <vbox id="tags-toggle" flex="1"/>
+
+                <vbox id="tag-controls">
+                    <hbox>
+                        <!-- TODO: &zotero.tagSelector.filter; is now unused -->
+                        <textbox id="tags-search" flex="1" type="search" timeout="250" dir="reverse"
+                            oncommand="document.getBindingParent(this).handleKeyPress(); event.stopPropagation()"
+                            onkeypress="if (event.keyCode == event.DOM_VK_ESCAPE) { document.getBindingParent(this).handleKeyPress(true); }"/>
+                        <toolbarbutton id="view-settings-menu" tooltiptext="&zotero.toolbar.actions.label;"
+                                image="chrome://zotero/skin/tag-selector-menu.png" type="menu">
+                            <menupopup id="view-settings-popup"
+                                    onpopupshown="/*
+                                            This is necessary to fix a bug with Display All Tags not
+                                            being checked if enabled before menuu is shown (OS X only?)
+                                        */
+                                        document.getElementById('show-automatic').setAttribute('checked', document.getBindingParent(this).showAutomatic);
+                                        document.getElementById('display-all-tags').setAttribute('checked', !document.getBindingParent(this).filterToScope);">
+                                <menuitem id="num-selected" disabled="true"/>
+                                <menuitem id="deselect-all" label="&zotero.tagSelector.clearAll;"
+                                    oncommand="document.getBindingParent(this).clearAll(); event.stopPropagation();"/>
+                                <menuseparator/>
+                                <menuitem id="show-automatic" label="&zotero.tagSelector.showAutomatic;" type="checkbox"
+                                    oncommand="var ts = document.getBindingParent(this);
+                                        ts._dirty = true;
+                                        var showAutomatic = this.getAttribute('checked') == 'true';
+                                        ts.setAttribute('showAutomatic', showAutomatic);
+                                        this.setAttribute('checked', showAutomatic);"/>
+                                <menuitem id="display-all-tags" label="&zotero.tagSelector.displayAllInLibrary;" type="checkbox"
+                                    oncommand="var displayAll = this.getAttribute('checked') == 'true';
+                                        this.setAttribute('checked', !displayAll);
+                                        document.getBindingParent(this).filterToScope = !displayAll;
+                                        event.stopPropagation();"/>
+                                <!-- This is the marked part -->
+                                <menuseparator/>
+                                <menuitem id="batch-edit-tags" label="Batch Edit Tags" oncommand="document.getBindingParent(this).batchEdit();"/>
+                                <!-- Marked part ends -->
+                            </menupopup>
+                        </toolbarbutton>
+                    </hbox>
+                </vbox>
+            </groupbox>
+        </content>
+        <!-- DO NOT TOUCH ANYTHING ABOVE OTHER THAN THE MARKED PART -->
+    </binding>
+</bindings>
