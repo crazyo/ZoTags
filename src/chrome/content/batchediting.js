@@ -124,6 +124,13 @@ var ZoTags_Main = new function() {
 
 
     function mergeTags() {
+        // confirm
+        if (!this._ps.confirm(null,
+                              "Are You Sure?",
+                              "Selected Tags Will Be REMOVED After Merged!")) {
+            return;
+        }
+
         // get all tags selected
         var tagids = [];
         var pool = document.getElementById("tags-pool").children;
@@ -186,6 +193,13 @@ var ZoTags_Main = new function() {
     }
 
     function deleteTags() {
+        // confirm
+        if (!this._ps.confirm(null,
+                              "Are You Sure?",
+                              "Selected Tags Will Be DELETED!")) {
+            return;
+        }
+
         // get all tags selected
         var tagids = [];
         var pool = document.getElementById("tags-pool").children;
