@@ -4,5 +4,3 @@ if (!Zotero.ZoTags) {
                            .getService(Components.interfaces.mozIJSSubScriptLoader);
     loader.loadSubScript("chrome://zotags/content/zotags.js");
 }
-
-window.addEventListener("load", function() { Zotero.ZoTags.init(); });

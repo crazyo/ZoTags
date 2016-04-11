@@ -1,0 +1,3 @@
+zoterotagselector {
+    -moz-binding: url("chrome://zotags/content/batchediting.xml#tags-batch-editing") !important;
+}
