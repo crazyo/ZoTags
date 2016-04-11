@@ -14,5 +14,3 @@ Zotero.ZoTags = {
                           "chrome,centerscreen,resizable=no");
     },
 };
-
-window.addEventListener("load", function() { Zotero.ZoTags.init(); });
