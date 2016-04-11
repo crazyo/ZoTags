@@ -1,6 +1,6 @@
 // only create main object once
-if (!Zotero.ZotBatch) {
+if (!Zotero.ZoTags) {
     var loader = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
                            .getService(Components.interfaces.mozIJSSubScriptLoader);
-    loader.loadSubScript("chrome://zotbatch/content/zotbatch.js");
+    loader.loadSubScript("chrome://zotags/content/zotags.js");
 }

@@ -10,7 +10,7 @@
             <method name="batchEdit">
                 <body>
                     <![CDATA[
-                    Zotero.ZotBatch.openBatchEditingDialog();
+                    Zotero.ZoTags.openBatchEditingDialog();
                     ]]>
                 </body>
             </method>

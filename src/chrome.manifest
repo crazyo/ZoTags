@@ -1,3 +1,3 @@
-content zotbatch chrome/content/
+content zotags chrome/content/
 
-overlay chrome://zotero/content/zoteroPane.xul chrome://zotbatch/content/overlay.xul
+overlay chrome://zotero/content/zoteroPane.xul chrome://zotags/content/overlay.xul

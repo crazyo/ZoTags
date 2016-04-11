@@ -5,7 +5,7 @@
         id="batch-edit-tags-dialog"
         title="Tag Batch Editing"
         buttons="accept" buttonlabelaccept="Close"
-        onload="ZotBatch_Main.init();">
+        onload="ZoTags_Main.init();">
 
     <script src="chrome://zotero/content/include.js"/>
     <script src="batchediting.js"/>
@@ -15,11 +15,11 @@
             <caption label="Filters"/>
             <hbox align="center">
                 <label control="search-by-tagname" value="Tag name contains: "/>
-                <textbox id="search-by-tagname" oninput="ZotBatch_Main.updateTagsPool();"/>
+                <textbox id="search-by-tagname" oninput="ZoTags_Main.updateTagsPool();"/>
             </hbox>
             <groupbox>
                 <caption label="Library"/>
-                <menulist id="library-list-menu" oncommand="ZotBatch_Main.updateTagsPool();">
+                <menulist id="library-list-menu" oncommand="ZoTags_Main.updateTagsPool();">
                     <menupopup id="library-list"/>
                 </menulist>
             </groupbox>
@@ -27,7 +27,7 @@
                 <caption label="Items"/>
                 <hbox align="center">
                     <label value="Tags assigned to items: "/>
-                    <button label="Select Items" oncommand="ZotBatch_Main.selectItems(); ZotBatch_Main.updateTagsPool();"/>
+                    <button label="Select Items" oncommand="ZoTags_Main.selectItems(); ZoTags_Main.updateTagsPool();"/>
                 </hbox>
                 <listbox id="items-pool" rows="5" disabled="true"/>
                 <radiogroup>
@@ -44,14 +44,9 @@
             <groupbox>
                 <caption label="Actions"/>
                 <hbox align="center">
-                    <button id="merge-tags" label="Merge" tooltiptext="Merge tags selected above"/>
-                    <button id="delete-tags" label="Delete" tooltiptext="Delete tags selected above"/>
-                    <button id="add-new-tag" label="Add" tooltiptext="Add a new tag to selected items"/>
-                </hbox>
-                <separator class="groove-thin"/>
-                <hbox align="center" hidden="true">
-                    <label control="enter-new-tagname" value="Enter new tag name: "/>
-                    <textbox id="enter-new-tagname"/>
+                    <button id="merge-tags" label="Merge" tooltiptext="Merge tags selected above" oncommand="ZoTags_Main.mergeTags();"/>
+                    <button id="delete-tags" label="Delete" tooltiptext="Delete tags selected above" oncommand="ZoTags_Main.deleteTags();"/>
+                    <button id="add-new-tag" label="Add" tooltiptext="Add a new tag to selected items" oncommand="ZoTags_Main.addNewTag();"/>
                 </hbox>
             </groupbox>
         </vbox>
