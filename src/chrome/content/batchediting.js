@@ -151,6 +151,7 @@ var ZoTags_Main = new function() {
                           "chrome,centerscreen,modal,resizable=no",
                           io);
         var newTagName = io.out;
+        if (!newTagName) return;
 
         // decide whether it is a global change
         var all = document.getElementById("apply-global").selected;
@@ -231,6 +232,7 @@ var ZoTags_Main = new function() {
                           "chrome,centerscreen,modal,resizable=no",
                           io);
         var name = io.out;
+        if (!name) return;
 
         // add the new tag to selected items
         var items = Zotero.Items.get(this._selectedItemIDs);
