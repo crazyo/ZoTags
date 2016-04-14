@@ -10,12 +10,12 @@
     <script src="chrome://zotero/content/include.js"/>
     <script src="batchediting.js"/>
 
-    <hbox>
-        <groupbox>
+    <hbox flex="1">
+        <groupbox flex="1">
             <caption label="Filters"/>
             <hbox align="center">
                 <label control="search-by-tagname" value="Tag name contains: "/>
-                <textbox id="search-by-tagname" oninput="ZoTags_Main.updateTagsPool();"/>
+                <textbox id="search-by-tagname" oninput="ZoTags_Main.updateTagsPool();" flex="1"/>
             </hbox>
             <groupbox>
                 <caption label="Library"/>
@@ -23,25 +23,25 @@
                     <menupopup id="library-list"/>
                 </menulist>
             </groupbox>
-            <groupbox>
+            <groupbox flex="1">
                 <caption label="Items"/>
                 <hbox align="center">
                     <label value="Tags assigned to items: "/>
                     <button label="Select Items" oncommand="ZoTags_Main.selectItems(); ZoTags_Main.updateTagsPool();"/>
                 </hbox>
-                <listbox id="items-pool" rows="5" disabled="true"/>
+                <listbox id="items-pool" disabled="true" flex="1"/>
                 <radiogroup>
                     <radio id="apply-global" label="Apply tag changes globally" selected="true"/>
                     <radio id="apply-selected" label="Apply tag changes only to above selected items"/>
                 </radiogroup>
             </groupbox>
         </groupbox>
-        <vbox>
-            <groupbox>
+        <vbox flex="2">
+            <groupbox flex="1">
                 <caption label="Tags"/>
-                <listbox id="tags-pool" rows="10"/>
+                <listbox id="tags-pool" flex="1"/>
             </groupbox>
-            <groupbox>
+            <groupbox align="center">
                 <caption label="Actions"/>
                 <hbox align="center">
                     <button id="merge-tags" label="Merge" tooltiptext="Merge tags selected above" oncommand="ZoTags_Main.mergeTags();"/>

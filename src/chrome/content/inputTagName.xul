@@ -2,27 +2,21 @@
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 
 <dialog xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        id="input-tagname-dialog"
-        title="Enter Tag Name"
+        id="merged-tagname-dialog"
+        title="Merged Tag Name"
         buttons="accept"
         onload="init();"
         ondialogaccept="accept();">
 
-    <script>
-        function init() {
-            document.documentElement.getButton('accept').disabled = true;
-            document.getElementById("tagname-input").addEventListener("input", function() {
-                document.documentElement.getButton('accept').disabled = this.value ? false : true;
-            })
-        }
-
-        function accept() {
-            window.arguments[0].out = document.getElementById("tagname-input").value;
-        }
-    </script>
+    <script src="inputTagName.js"/>
 
     <vbox>
-        <label control="tagname-input" value="Name for the New Tag: "/>
-        <textbox id="tagname-input"/>
+        <groupbox>
+            <caption label="Name of the Merged Tag"/>
+            <radiogroup id="merged-tagname-pool"/>
+            <separator class="groove"/>
+            <label control="tagname-input" value="...or, enter a new name: "/>
+            <textbox id="tagname-input"/>
+        </groupbox>
     </vbox>
 </dialog>

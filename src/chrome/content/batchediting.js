@@ -127,7 +127,7 @@ var ZoTags_Main = new function() {
         // confirm
         if (!this._ps.confirm(null,
                               "Are You Sure?",
-                              "Selected Tags Will Be REMOVED After Merged!")) {
+                              "You cannot undo the merge. Are you sure you wish to proceed?")) {
             return;
         }
 
@@ -145,10 +145,14 @@ var ZoTags_Main = new function() {
         }
 
         // get name for the new tag
-        var io = {};
+        var tags = [];
+        for (var i = 0; i < tagids.length; i++) {
+            tags.push(Zotero.Tags.getName(tagids[i]));
+        }
+        var io = {tags: tags};
         window.openDialog("chrome://zotags/content/inputTagName.xul",
                           "",
-                          "chrome,centerscreen,modal,resizable=no",
+                          "chrome,centerscreen,modal,resizable",
                           io);
         var newTagName = io.out;
         if (!newTagName) return;
@@ -197,7 +201,7 @@ var ZoTags_Main = new function() {
         // confirm
         if (!this._ps.confirm(null,
                               "Are You Sure?",
-                              "Selected Tags Will Be DELETED!")) {
+                              "You cannot undo the deletion. Are you sure you wish to proceed?")) {
             return;
         }
 
@@ -229,7 +233,7 @@ var ZoTags_Main = new function() {
         var io = {};
         window.openDialog("chrome://zotags/content/inputTagName.xul",
                           "",
-                          "chrome,centerscreen,modal,resizable=no",
+                          "chrome,centerscreen,modal,resizable",
                           io);
         var name = io.out;
         if (!name) return;

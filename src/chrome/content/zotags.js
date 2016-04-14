@@ -7,6 +7,6 @@ Zotero.ZoTags = {
     openBatchEditingDialog: function() {
         window.openDialog("chrome://zotags/content/batchediting.xul",
                           "",
-                          "chrome,centerscreen,resizable=no");
+                          "chrome,centerscreen,resizable");
     },
 };
