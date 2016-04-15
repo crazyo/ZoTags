@@ -8,15 +8,15 @@
         onload="init();"
         ondialogaccept="accept();">
 
-    <script src="inputTagName.js"/>
+    <script src="inputMergedTagName.js"/>
 
     <vbox>
         <groupbox>
             <caption label="Name of the Merged Tag"/>
             <radiogroup id="merged-tagname-pool"/>
             <separator class="groove"/>
-            <label control="tagname-input" value="...or, enter a new name: "/>
-            <textbox id="tagname-input"/>
+            <label control="merged-tagname-input" value="...or, enter a new name: "/>
+            <textbox id="merged-tagname-input"/>
         </groupbox>
     </vbox>
 </dialog>

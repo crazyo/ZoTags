@@ -6,7 +6,7 @@ var _io;
 function init() {
     // assign global variables
     _pool = document.getElementById("merged-tagname-pool");
-    _input = document.getElementById("tagname-input");
+    _input = document.getElementById("merged-tagname-input");
     _acceptButton = document.documentElement.getButton('accept');
     _io = window.arguments[0];
 

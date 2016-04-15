@@ -150,7 +150,7 @@ var ZoTags_Main = new function() {
             tags.push(Zotero.Tags.getName(tagids[i]));
         }
         var io = {tags: tags};
-        window.openDialog("chrome://zotags/content/inputTagName.xul",
+        window.openDialog("chrome://zotags/content/inputMergedTagName.xul",
                           "",
                           "chrome,centerscreen,modal,resizable",
                           io);
@@ -231,7 +231,7 @@ var ZoTags_Main = new function() {
     function addNewTag() {
         // get name for the new tag
         var io = {};
-        window.openDialog("chrome://zotags/content/inputTagName.xul",
+        window.openDialog("chrome://zotags/content/inputNewTagName.xul",
                           "",
                           "chrome,centerscreen,modal,resizable",
                           io);
